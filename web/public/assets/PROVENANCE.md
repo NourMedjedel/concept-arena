@@ -14,7 +14,7 @@ All three images show one closed pack plus a matching open pack with the same mu
 | `concept-b.png` | Veil — slender deep-plum satin shell                       | Image edit using `concept-a.png` as target and scene reference | `generator-output/exec-4d65db39-aa59-4923-af2d-29dad645bc06.png` |
 | `concept-c.png` | Ritual — matte ivory tactile shell with subtle refill seam | Image edit using `concept-a.png` as target and scene reference | `generator-output/exec-ea66abb4-c3aa-4e21-a3ff-17a7b12b027f.png` |
 
-All assets use opaque warm-ivory backgrounds (`transparent_background: false`). Images were copied byte-for-byte into this directory; no code-generated product art, stock photography, compositing, or post-generation image editing was used. The tool returned 1254 × 1254 px square PNGs; the requested 2048 × 2048 output was advisory and was not returned. No logos, visible text, claims, UI heatmaps, or overlays are burned into the assets.
+All assets use opaque warm-ivory backgrounds (`transparent_background: false`). Images were copied byte-for-byte into this directory; no code-generated product art, stock photography, compositing, or post-generation image editing was used. The tool returned 1254 × 1254 px square PNGs; the requested 2048 × 2048 output was advisory and was not returned. No logos, visible text, claims, UI heatmaps, or overlays are burned into the three concept renders. The separate sharing cover below includes promotional text.
 
 ## Inspection
 
@@ -68,3 +68,24 @@ Avoid: no people, no hands, no props, no icons, no watermarks, no badges, no UI 
 ```
 
 Tool arguments: `referenced_image_paths: ["web/public/assets/concept-a.png"]`, `transparent_background: false`.
+
+## Sharing cover
+
+`share-cover.png` is a promotional illustration generated with the built-in image-generation tool, using the three original fictional concept renders above as references. It is not a screenshot or a claim of real fieldwork. The cover has no real brand names, logos or performance metrics.
+
+Final generation prompt:
+
+```text
+Use case: ads-marketing / compositing.
+Create a finished premium portfolio thumbnail for a software project called ConceptArena. Wide landscape, approximately 16:9, very high resolution, crisp typography.
+Input images are reference assets for the three original fictional lip-colour concepts, not brand logos: image 1 Sculpt in brushed champagne, image 2 Veil in satin dark plum, image 3 Ritual in warm matte ivory. Preserve their distinctive open-tube silhouettes, finishes, gold inner collars and identical muted berry-nude lipstick shade. Show only one open tube per concept: three products total, no separate caps.
+Composition: elegant editorial graphic design for an AI engineering / beauty research demo, not a cosmetics advertisement. Warm ivory background, deep plum text, subtle champagne accents. Large clear title at left, three realistic product renders grouped with calm studio shadows at right. Clean contemporary luxury, generous whitespace, precise alignment, restrained and uncluttered. No enclosing border. Keep ALL important text and product shapes comfortably inside the central 80% of the canvas, away from edges, so preview crops do not cut them. Typography inspired by a refined high-contrast editorial serif paired with a clean geometric sans serif.
+Exact text, carefully typeset with excellent readability:
+"ConceptArena"
+"Beauty feedback."
+"Clearer decisions."
+Small supporting line: "Compare · Review · Export"
+Small understated label: "Interactive research demo"
+Small bottom disclosure: "Fictional concepts · Synthetic study"
+Avoid any other text, numbers, badges, fake dashboards, charts, portraits, real company names, known logos, interlocking-C symbols, watermarks, glitter, excessive effects or busy decoration. Make it sophisticated and useful at small thumbnail size.
+```
