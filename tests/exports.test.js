@@ -13,6 +13,7 @@ import {
   readStudy,
   createDeck,
   exportableFindings,
+  presentationBuffer,
 } from "../web/exports.js";
 test("XLSX roundtrip preserves source IDs, choices and response text", async () => {
   const s = createSampleStudy(),
@@ -63,10 +64,7 @@ test("reviewed presentation generates a real editable PPTX", async () => {
   for (const id of ["occasion", "refill", "practicality"])
     approveFinding(s, st, id);
   const pptx = createDeck(s, st);
-  const buffer = await pptx.write({
-    outputType: "nodebuffer",
-    compression: true,
-  });
+  const buffer = Buffer.from(await presentationBuffer(pptx));
   assert.ok(buffer.length > 10000);
   assert.equal(buffer.subarray(0, 2).toString(), "PK");
   assert.equal(pptx._slides.length, 6);

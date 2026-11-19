@@ -43,44 +43,78 @@ export async function proposeCoding(text) {
     mode: "live-local",
   };
 }
+export function createAssistHandler({
+  infer = proposeCoding,
+  port = 8789,
+  now = Date.now,
+} = {}) {
+  let active = false;
+  const attempts = [];
+  return async (req, res) => {
+    const reply = (status, error) => {
+      res.statusCode = status;
+      res.end(JSON.stringify({ error }));
+    };
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    if (req.method !== "POST") return reply(405, "Use POST.");
+    const host = req.headers.host,
+      origin = req.headers.origin;
+    if (
+      !["127.0.0.1:" + port, "localhost:" + port].includes(host) ||
+      origin !== "http://" + host
+    )
+      return reply(403, "Use the same local app origin.");
+    if (
+      req.headers["content-type"]?.split(";")[0].trim() !== "application/json"
+    )
+      return reply(415, "Use application/json.");
+    if (Number(req.headers["content-length"] || 0) > 12000)
+      return reply(413, "Request is too large.");
+    while (attempts.length && attempts[0] <= now() - 60000) attempts.shift();
+    if (active || attempts.length >= 5) {
+      res.setHeader("Retry-After", "60");
+      return reply(429, "The local assistant is busy. Try again shortly.");
+    }
+    active = true;
+    attempts.push(now());
+    try {
+      req.setTimeout?.(10000, () => req.destroy());
+      let size = 0;
+      const chunks = [];
+      for await (const chunk of req) {
+        const bytes = Buffer.from(chunk);
+        size += bytes.length;
+        if (size > 12000) return reply(413, "Request is too large.");
+        chunks.push(bytes);
+      }
+      req.setTimeout?.(0);
+      const { text } = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      if (typeof text !== "string" || !text.trim() || text.length > 4000)
+        return reply(400, "Use a response of 1–4,000 characters.");
+      res.end(JSON.stringify(await infer(text)));
+    } catch (error) {
+      reply(
+        400,
+        error.name === "TimeoutError"
+          ? "Local model timed out. Your coding was not changed."
+          : "The local request could not be completed. Check Ollama and the selected response.",
+      );
+    } finally {
+      req.setTimeout?.(0);
+      active = false;
+    }
+  };
+}
 export function localAssistPlugin() {
   return {
     name: "local-ollama-assist",
     configureServer(server) {
-      server.middlewares.use("/api/assist", async (req, res) => {
-        res.setHeader("Content-Type", "application/json");
-        res.setHeader("Cache-Control", "no-store");
-        if (req.method !== "POST") {
-          res.statusCode = 405;
-          res.end(JSON.stringify({ error: "Use POST." }));
-          return;
-        }
-        const origin = req.headers.origin;
-        if (origin && !/^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(origin)) {
-          res.statusCode = 403;
-          res.end(JSON.stringify({ error: "Local requests only." }));
-          return;
-        }
-        try {
-          let body = "";
-          for await (const chunk of req) {
-            body += chunk;
-            if (body.length > 12000) throw Error("Request is too large.");
-          }
-          const { text } = JSON.parse(body);
-          res.end(JSON.stringify(await proposeCoding(text)));
-        } catch (error) {
-          res.statusCode = 400;
-          res.end(
-            JSON.stringify({
-              error:
-                error.name === "TimeoutError"
-                  ? "Local model timed out. Your coding was not changed."
-                  : error.message,
-            }),
-          );
-        }
-      });
+      server.middlewares.use(
+        "/api/assist",
+        createAssistHandler({ port: server.config.server.port }),
+      );
     },
   };
 }

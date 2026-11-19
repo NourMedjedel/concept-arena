@@ -24,14 +24,7 @@ let study = createSampleStudy(),
   proposal = null;
 const app = document.querySelector("#app"),
   dialog = document.querySelector("#dialog");
-const esc = (v) =>
-  String(v ?? "").replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ],
-  );
+import { escapeHTML as esc } from "./text.js";
 const button = (text, action, cls = "", attrs = "") =>
   `<button type="button" class="${cls}" data-action="${action}" ${attrs}>${text}</button>`;
 const concept = (id) => study.concepts.find((c) => c.id === id);
@@ -210,7 +203,7 @@ function showCoding(id) {
       )
       .join(
         "",
-      )}</select></label><label>Stance<select name="stance">${["positive", "concern", "neutral", "mixed"].map((key) => `<option ${r.stance === key ? "selected" : ""}>${key}</option>`).join("")}</select></label></div><div id="ai-proposal"></div><div class="dialog-actions">${button("Suggest with local AI", "assist", "quiet", `data-id="${esc(r.id)}"`)}<button class="primary" type="submit">Save reviewed coding</button></div><p class="fine-print">${import.meta.env.DEV ? "Live local Qwen3:8b. Only this response is sent to Ollama on your computer." : "Recorded Qwen3:8b proposals are available for R006, R014 and R026. Nothing is sent to a hosted model."} Suggestions never apply automatically.</p></form>`,
+      )}</select></label><label>Stance<select name="stance">${["positive", "concern", "neutral", "mixed"].map((key) => `<option ${r.stance === key ? "selected" : ""}>${key}</option>`).join("")}</select></label></div><div id="ai-proposal"></div><div class="dialog-actions">${button(import.meta.env.DEV ? "Suggest with local AI" : "View recorded AI", "assist", "quiet", `data-id="${esc(r.id)}"`)}<button class="primary" type="submit">Save reviewed coding</button></div><p class="fine-print">${import.meta.env.DEV ? "Live local Qwen3:8b. Only this response is sent to Ollama on your computer." : "Recorded Qwen3:8b proposals are available for R006, R014 and R026. Nothing is sent to a hosted model."} Suggestions never apply automatically.</p></form>`,
     "coding-dialog",
   );
 }
@@ -242,7 +235,9 @@ async function assist(id, el) {
     target.innerHTML = `<p class="form-error" role="alert">${esc(e.message)}</p>`;
   } finally {
     el.disabled = false;
-    el.textContent = "Suggest with local AI";
+    el.textContent = import.meta.env.DEV
+      ? "Suggest with local AI"
+      : "View recorded AI";
   }
 }
 function showMethods() {
@@ -253,7 +248,7 @@ function showMethods() {
 }
 function showImport() {
   showDialog(
-    `<h2>Your evidence.<br><em>A clear structure.</em></h2><p class="dialog-intro">Import an .xlsx workbook for a three-concept lip-colour study. Start from the sample to keep source links and choices intact.</p><ol class="import-steps"><li><b>Responses</b><span>One response per row, with participant, concept A/B/C, exposure, occasion, text and coding.</span></li><li><b>Choices</b><span>One explicit choice per person and occasion, linked to its response ID.</span></li><li><b>Participants</b><span>Optional language and routine fields. Anonymous IDs only.</span></li></ol><div class="dialog-actions">${button("Download sample workbook", "sample-xlsx", "quiet")}<label class="primary file-button">Choose .xlsx<input type="file" id="study-file" accept=".xlsx"></label></div><div id="import-error" role="alert"></div><p class="fine-print">Maximum 4 MB and 5,000 rows per input sheet. Canonical columns required; arbitrary workbooks are not automatically interpreted. Opening a workbook replaces the current session. No file upload.</p>`,
+    `<h2>Your evidence.<br><em>A clear structure.</em></h2><p class="dialog-intro">Import an .xlsx workbook for a three-concept lip-colour study. Start from the sample to keep source links and choices intact.</p><ol class="import-steps"><li><b>Responses</b><span>One response per row, with participant, concept A/B/C, exposure, occasion, text and coding.</span></li><li><b>Choices</b><span>One explicit choice per person and occasion, linked to its response ID.</span></li><li><b>Participants</b><span>Optional language and routine fields. Anonymous IDs only.</span></li></ol><div class="dialog-actions">${button("Download sample workbook", "sample-xlsx", "quiet")}<label class="primary file-button">Choose .xlsx<input type="file" id="study-file" accept=".xlsx"></label></div><div id="import-error" role="alert"></div><p class="fine-print">Maximum 4 MB compressed, 12 MB expanded, 32 columns and 5,000 data rows per sheet. No formulas, external links or embedded objects. Canonical columns required; arbitrary workbooks are not automatically interpreted. Opening a workbook replaces the current session. No file upload.</p>`,
   );
 }
 function showExport() {
@@ -431,10 +426,11 @@ async function handleAction(event) {
             ),
           );
           const deck = exp.createDeck(study, state, images);
-          await deck.writeFile({
-            fileName: "concept-arena-reviewed-study.pptx",
-            compression: true,
-          });
+          exp.downloadBytes(
+            await exp.presentationBuffer(deck),
+            "concept-arena-reviewed-study.pptx",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          );
         } else {
           const s = action === "sample-xlsx" ? createSampleStudy() : study;
           const st = action === "sample-xlsx" ? createState(s) : state;

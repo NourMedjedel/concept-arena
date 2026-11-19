@@ -149,7 +149,7 @@ test("accepting a proposal still requires an explicit coding edit", () => {
     },
     r.text,
   );
-  assert.deepEqual(st.overrides, {});
+  assert.equal(Object.keys(st.overrides).length, 0);
   applyCoding(s, st, r.id, proposal);
   assert.deepEqual(st.overrides[r.id].codes, ["luxury"]);
 });

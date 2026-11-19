@@ -11,7 +11,7 @@ Compare three fictional lip-colour concepts, follow a participant's reasoning, r
 ## Try it in one minute
 
 1. **Compare:** switch between **For myself** and **As a gift**. The explicit choices change from Veil (6 of 12) to Sculpt (7 of 12). Select a case to continue.
-2. **Feedback:** read source-linked responses. Filters, individual participants and theme review are available when needed. **Check themes** opens the optional local-AI assistant.
+2. **Feedback:** read source-linked responses. Filters, individual participants and theme review are available when needed. **Check themes** opens the optional assistant. The public demo says **View recorded AI**; live inference runs only in local development.
 3. **Findings:** open a finding, inspect support and counterexamples, edit the recommendation and approve it. **Export** creates editable PPTX slides and an XLSX evidence workbook.
 
 A relevant coding change marks its dependent finding for review. Draft and outdated interpretations cannot enter the presentation.
@@ -56,7 +56,7 @@ Use **Import → Download sample workbook** as the template. This first version 
 
 Theme codes and region names are provided in the sample's `Codebook` sheet. Use semicolons between themes. Stance is `positive`, `concern`, `neutral` or `mixed`; coding status is `authored`, `reviewed` or `needs_review`. Missing status defaults to review. Use plain values rather than formulas.
 
-Maximum compressed workbook size: 4 MB; maximum 5,000 data rows per input sheet. Imported text is rendered as text. Files are parsed in the browser and replace the in-memory session only after validation. Reloading the page resets the session, so export your evidence workbook to keep changes. Do not use this prototype for confidential research without your own deployment review.
+Workbook limits: 4 MB compressed, 12 MB expanded, 32 columns and 5,000 data rows per sheet. Use plain .xlsx files without external links, macros, images or embedded objects. Imported text is rendered as text. Files are parsed in the browser and replace the in-memory session only after validation. Reloading the page resets the session, so export your evidence workbook to keep changes. Do not use this prototype for confidential research without your own deployment review.
 
 ## What the analysis means
 
@@ -81,7 +81,7 @@ npm run build            # static dist/ for GitHub Pages
 npm run samples          # editable sample artifacts/ files
 ```
 
-The sample deck has been rendered with LibreOffice and checked visually. It contains a native chart with its embedded spreadsheet, editable text, original raster illustrations and source IDs in slide notes. Cross-application rendering can differ.
+The sample deck has been rendered with LibreOffice; the comparison chart has also been opened and checked as an editable chart in Keynote. A shared export step repairs the invalid embedded-workbook range and orphan axis emitted by PptxGenJS 4.0.1 ([upstream #1531](https://github.com/gitbrent/PptxGenJS/issues/1531), [#1534](https://github.com/gitbrent/PptxGenJS/issues/1534)). It contains a native chart with its embedded spreadsheet, editable text, original raster illustrations and source IDs in slide notes. Cross-application rendering can differ.
 
 `web/model.js` contains the analysis rules; `web/exports.js` contains workbook parsing and export builders. Patched transitive dependency versions are pinned with npm overrides; the lockfile is committed. CI checks formatting, tests and build before deployment.
 
@@ -96,3 +96,7 @@ The sample deck has been rendered with LibreOffice and checked visually. It cont
 MIT for repository code. Generated illustrations are provided as fictional demo assets; their provenance and limitations are documented separately.
 
 Typography: Instrument Serif and Manrope, bundled locally under the SIL Open Font License. License texts are included in `web/public/assets/fonts/`.
+
+## Security and data flow
+
+GitHub Pages serves a static app and recorded model proposals. It has no inference backend, API key or research-file upload. XLSX parsing and PPTX generation run in your browser. Live local mode uses a same-origin, loopback-only Ollama adapter, with request-size, rate and concurrency limits. [Security scope and protections](SECURITY.md).

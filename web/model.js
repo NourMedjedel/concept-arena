@@ -7,10 +7,10 @@ export function createState(study) {
   return {
     context: "personal",
     phase: "concept",
-    overrides: {},
-    approvals: {},
+    overrides: Object.create(null),
+    approvals: Object.create(null),
     revision: 0,
-    notes: {},
+    notes: Object.create(null),
     selectedConcept: "A",
     selectedParticipant: study.participants[0]?.id,
   };

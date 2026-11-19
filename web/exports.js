@@ -1,4 +1,6 @@
+export { presentationBuffer } from "./pptx-compat.js";
 import ExcelJS from "exceljs";
+import { guardWorkbook } from "./workbook-guard.js";
 import pptxgen from "pptxgenjs";
 import { codebook, createSampleStudy } from "./data/sample-study.js";
 import {
@@ -48,6 +50,8 @@ const aliases = {
 function records(sheet, required, choice = false) {
   if (!sheet)
     throw Error("Missing " + (choice ? "Choices" : "Responses") + " sheet.");
+  if (sheet.columnCount > 32)
+    throw Error("Use at most 32 columns per study sheet.");
   if (sheet.rowCount > 5001)
     throw Error("Each input sheet may contain at most 5,000 data rows.");
   const headers = sheet
@@ -55,14 +59,25 @@ function records(sheet, required, choice = false) {
     .values.slice(1)
     .map((v) => {
       const k = normalize(plain(v));
-      return choice && k === "responseid" ? "responseId" : aliases[k] || k;
+      return choice && k === "responseid"
+        ? "responseId"
+        : Object.hasOwn(aliases, k)
+          ? aliases[k]
+          : k;
     });
   if (required.some((k) => !headers.includes(k)))
     throw Error(sheet.name + " needs columns: " + required.join(", ") + ".");
+  if (
+    headers.some((k) => ["constructor", "prototype", "__proto__"].includes(k))
+  )
+    throw Error("Reserved column names are not supported.");
+  const present = headers.filter(Boolean);
+  if (new Set(present).size !== present.length)
+    throw Error("Use unique column names in each sheet.");
   const rows = [];
   sheet.eachRow((row, i) => {
     if (i === 1) return;
-    const item = {};
+    const item = Object.create(null);
     headers.forEach((key, j) => {
       if (key) item[key] = plain(row.getCell(j + 1).value);
     });
@@ -75,7 +90,7 @@ export async function readStudy(buffer) {
   if (buffer.byteLength > 4 * 1024 * 1024)
     throw Error("Please use a workbook smaller than 4 MB.");
   const wb = new ExcelJS.Workbook();
-  await wb.xlsx.load(buffer);
+  await wb.xlsx.load(await guardWorkbook(buffer));
   const responses = records(
     wb.getWorksheet("Responses"),
     columns.filter((k) => k !== "status"),
@@ -98,7 +113,7 @@ export async function readStudy(buffer) {
     ? records(participantsSheet, ["id"]).map((p) => ({
         id: p.id,
         language: p.language,
-        routine: p.routine,
+        routine: p.routine?.slice(0, 120),
       }))
     : [];
   return validateStudy({
@@ -397,9 +412,7 @@ export function createDeck(study, state, images = {}) {
       showCatName: false,
       valAxisMinVal: 0,
       valAxisMajorUnit: Math.max(1, Math.ceil(Math.max(p.n, g.n) / 6)),
-      showCatName: false,
       showShadow: false,
-      showCatName: false,
     },
   );
   text(

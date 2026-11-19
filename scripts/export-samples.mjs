@@ -1,7 +1,11 @@
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { createSampleStudy } from "../web/data/sample-study.js";
 import { createState, approveFinding } from "../web/model.js";
-import { workbookBuffer, createDeck } from "../web/exports.js";
+import {
+  workbookBuffer,
+  createDeck,
+  presentationBuffer,
+} from "../web/exports.js";
 const s = createSampleStudy(),
   st = createState(s);
 for (const id of ["occasion", "refill", "practicality"])
@@ -20,8 +24,8 @@ const images = Object.fromEntries(
     ]),
   ),
 );
-await createDeck(s, st, images).writeFile({
-  fileName: "artifacts/concept-arena-study.pptx",
-  compression: true,
-});
+await writeFile(
+  "artifacts/concept-arena-study.pptx",
+  await presentationBuffer(createDeck(s, st, images)),
+);
 console.log("Created editable XLSX and PPTX samples in artifacts/.");

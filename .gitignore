@@ -4,3 +4,9 @@ artifacts/
 .DS_Store
 .env
 *.log
+output/
+.env.*
+.npmrc
+*.pem
+*.key
+*.p12
