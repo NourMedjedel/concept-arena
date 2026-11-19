@@ -1,6 +1,6 @@
 # ConceptArena: beauty research and product direction
 
-Research date: 19 November 2026.
+Research date: 19 November 2026. Source links rechecked on the same date.
 
 ## Recommendation
 
@@ -107,8 +107,8 @@ cosmetics summary also discusses distinct value and occasion patterns [S11]. The
 are reasons to preserve use context, not to assume that a US trend applies to all
 markets or that a forecast is an observed future outcome.
 
-**Human and synthetic evidence.** A research-agency case describes combining human
-feedback with synthetic analysis [S12]. Do not make simulated shoppers the source
+**Human and synthetic evidence.** Ipsos guidance stresses that useful synthetic
+data depends on real human data, research expertise and validation [S12]. Do not make simulated shoppers the source
 of a supposed market winner. The demo's authored dataset tests software behaviour;
 it must remain labelled synthetic in the app and in exports.
 
@@ -166,7 +166,7 @@ Source titles below describe their evidential role. Links are public references,
 not former-client disclosures or endorsements of this project.
 
 - **S1 — Research-agency pack screening/testing overview.** Public capability description; marketing claims of speed/accuracy were not used as independent evidence. https://www.kantar.com/marketplace/solutions/innovation-and-product-development/package-design-screening-and-testing
-- **S2 — Research-platform presentation templates.** Public documentation of branded PowerPoint generation. https://listenlabs.ai/docs/insights-and-reports/presentation-templates
+- **S2 — Research-platform Research Agent.** Public documentation of deck generation and workspace PowerPoint templates. https://listenlabs.ai/docs/insights-and-reports/research-agent
 - **S3 — Research-platform customer workflow case.** Vendor-authored account of evidence/readout fragmentation and reuse; not universal evidence about beauty firms. https://dovetail.com/customers/global-management-consulting-firm/
 - **S4 — US luxury-beauty research, 2026.** Public summary only; underlying paid tables were not accessed. https://store.mintel.com/report/us-luxury-beauty-consumer-market-report
 - **S5 — Beauty packaging, clarity and trust.** Updated 18 November 2026; provider analysis, not an independent benchmark for this demo. https://www.mintel.com/insights/packaging/dragonfly-ai-trust-at-first-glance/
@@ -176,4 +176,6 @@ not former-client disclosures or endorsements of this project.
 - **S9 — AI-mediated product discovery.** Public partnership announcement dated 14 September 2026. https://investors.elcompanies.com/en/news-and-media/newsroom/press-releases/2026/09-14-2026-173210983
 - **S10 — Consumer-outcome forecast for 2027.** Published 6 November 2026; a forecast, not an established future fact. https://www.mintel.com/press-centre/mintel-predicts-2027-brand-growth-will-shift-from-selling-products-to-delivering-outcomes/
 - **S11 — US colour cosmetics, 2026.** Public summary only; do not generalise its population to a French/English demo sample. https://store.mintel.com/report/us-color-cosmetics-market-report
-- **S12 — Human/synthetic research augmentation case.** Public agency account dated 14 September 2026. https://www.ipsos.com/en-us/can-synthetic-consumers-help-brands-make-better-decisions
+- **S12 — Synthetic Data: A Guide to Responsible Adoption.** Ipsos guidance published 14 August 2024; verified accessible on 19 November 2026. Guidance, not independent validation of this demo. https://www.ipsos.com/en-ca/synthetic-data-guide-responsible-adoption
+
+Link-access note: the Mintel Store summaries are publicly indexed, but direct automated requests returned HTTP 403 during this recheck. Paid report contents were not accessed. The previous Ipsos US article was replaced with the directly verified guidance page. The Listen Labs presentation-template URL was replaced with its publicly indexed Research Agent documentation; direct automated retrieval of that documentation was unavailable. Claims were revised to match the replacement sources.
