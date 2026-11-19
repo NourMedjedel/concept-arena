@@ -1,0 +1,45 @@
+{
+  "createdAt": "2026-11-19T20:05:53.903Z",
+  "kind": "recorded-local-model-proposals",
+  "results": {
+    "R006": {
+      "suggestion": {
+        "codes": ["refill_clarity"],
+        "region": "refill",
+        "stance": "neutral",
+        "excerpt": "The fine seam suggests where the refill opens.",
+        "rationale": "The statement indicates an understanding of the refill mechanism's design."
+      },
+      "model": "qwen3:8b",
+      "createdAt": "2026-11-19T20:05:45.131207Z",
+      "sourceText": "The fine seam suggests where the refill opens.",
+      "mode": "live-local"
+    },
+    "R014": {
+      "suggestion": {
+        "codes": ["refill_clarity"],
+        "region": "refill",
+        "stance": "positive",
+        "excerpt": "La ligne du mécanisme aide à comprendre que la coque se garde.",
+        "rationale": "The statement clarifies how the refill mechanism works."
+      },
+      "model": "qwen3:8b",
+      "createdAt": "2026-11-19T20:05:49.749901Z",
+      "sourceText": "La ligne du mécanisme aide à comprendre que la coque se garde.",
+      "mode": "live-local"
+    },
+    "R026": {
+      "suggestion": {
+        "codes": ["refill_clarity"],
+        "region": "refill",
+        "stance": "concern",
+        "excerpt": "ne vois pas où ouvrir la recharge",
+        "rationale": "The user expresses confusion about the refill mechanism."
+      },
+      "model": "qwen3:8b",
+      "createdAt": "2026-11-19T20:05:53.89845Z",
+      "sourceText": "Je le trouve élégant, mais je ne vois pas où ouvrir la recharge.",
+      "mode": "live-local"
+    }
+  }
+}
